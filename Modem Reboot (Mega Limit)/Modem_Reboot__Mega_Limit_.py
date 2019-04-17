@@ -2,6 +2,8 @@
 from selenium import webdriver
 import time
 import os
+import pyautogui
+
 
 def modemreboot():
     driver_path = "C:\\Users\\valid\\Downloads\\chromedriver\\chromedriver.exe"
@@ -35,6 +37,30 @@ def megakapat():
     os.system("start C:\\Users\\valid\\AppData\\Local\\MEGAsync\\MEGAsync.exe")
 
 
+def dosya_kontrol():
+    icon = os.path.isfile('.\\icon.png')
+    if icon:
+        pro = os.path.isfile('.\\pro.png')
+        if pro:
+            check()
+        else:
+            print("pro.png dosyası yok")
+    else:
+        print("icon.png yok")
 
-modemreboot()
-megakapat()
+def check():
+    try:
+        pyautogui.locateCenterOnScreen(".\\icon.png")
+        pyautogui.locateCenterOnScreen(".\\pro.png")
+        modemreboot()
+        print("modem yeniden başlatıldı")
+        megakapat()
+        print("mega kapatılıp açıldı")
+    except TypeError:
+        print("görsel bulunamadı")
+        time.sleep(10)
+        check()
+
+
+
+dosya_kontrol()
