@@ -5,18 +5,27 @@ import os
 import pyautogui
 
 
+            #DEĞİŞKENLER
+url = "http://192.168.1.1/#__restart.htm"
+kullanici_adi = "admin"
+sifree = "2EY*12em-"
+yenileme = 60
+
+            #DEĞİŞKENLER
+
+
 def modemreboot():
-    driver_path = "C:\\Users\\valid\\Downloads\\chromedriver\\chromedriver.exe"
+    driver_path = ".\\Ekler\\chromedriver.exe"
     browser = webdriver.Chrome(executable_path=driver_path)
-    browser.get("http://192.168.1.1/#__restart.htm")
+    browser.get(url)
     time.sleep(3)
 
     kullanici = browser.find_element_by_id("userName")
     sifre = browser.find_element_by_id("pcPassword")
     oturumac = browser.find_element_by_id("loginBtn")
 
-    kullanici.send_keys("admin")
-    sifre.send_keys("2EY*12em-")
+    kullanici.send_keys(kullanici_adi)
+    sifre.send_keys(sifree)
 
     oturumac.click()
 
@@ -38,29 +47,30 @@ def megakapat():
 
 
 def dosya_kontrol():
-    icon = os.path.isfile('.\\icon.png')
+    icon = os.path.isfile('.\\Ekler\\icon.png')
     if icon:
-        pro = os.path.isfile('.\\pro.png')
+        pro = os.path.isfile('.\\Ekler\\pro.png')
         if pro:
             check()
         else:
             print("pro.png dosyası yok")
     else:
         print("icon.png yok")
+        time.sleep(5)
 
 def check():
     try:
-        pyautogui.locateCenterOnScreen(".\\icon.png")
-        pyautogui.locateCenterOnScreen(".\\pro.png")
+        pyautogui.locateCenterOnScreen(".\\Ekler\\icon.png")
+        pyautogui.locateCenterOnScreen(".\\Ekler\\pro.png")
         modemreboot()
         print("modem yeniden başlatıldı")
         megakapat()
         print("mega kapatılıp açıldı")
     except TypeError:
-        print("görsel bulunamadı")
-        time.sleep(10)
+        print("Limit Aşımına Rastlanmadı. İptal etmek için ctrl+c basın")
+        time.sleep(yenileme)
         check()
 
 
 
-dosya_kontrol()
+modemreboot()
