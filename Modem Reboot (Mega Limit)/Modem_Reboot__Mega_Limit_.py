@@ -9,17 +9,14 @@ import pyautogui
 url = "http://192.168.1.1/#__restart.htm"
 kullanici_adi = "admin"
 sifree = "2EY*12em-"
-yenileme = 60
+yenileme = 300
+temizle = os.system("cls")
 
             #DEĞİŞKENLER
 
 
 
 def	giris(): #kullanıcı adı ve şifre girerek giriş yap
-    driver_path = ".\\Ekler\\chromedriver.exe"
-    browser = webdriver.Chrome(executable_path=driver_path)
-    browser.get(url)
-    time.sleep(5)
 
     kullanici = browser.find_element_by_id("userName")
     sifre = browser.find_element_by_id("pcPassword")
@@ -31,32 +28,32 @@ def	giris(): #kullanıcı adı ve şifre girerek giriş yap
     oturumac.click()
     time.sleep(5)
 
-def giris2(): #cookie ile giriş yap javascript kullanarak
-    driver_path = ".\\Ekler\\chromedriver.exe"
-    browser = webdriver.Chrome(executable_path=driver_path)
-    browser.get(url)
-    time.sleep(5)
+
+def giris_cookie(): #cookie ile giriş yap javascript kullanarak
     browser.execute_script('document.cookie = "Authorization=Basic YWRtaW46MkVZKjEyZW0t"')
     time.sleep(1)
     browser.execute_script('window.location.reload()')
     time.sleep(5)
-	
-	
+
 def modemreboot():
     button_reboot = browser.find_element_by_id("button_reboot") #button_reboot idini bul ve değişken ata
     button_reboot.click() #button_reboot'a tıkla
-
     time.sleep(1)
     alert = browser.switch_to.alert #tarayıcıda uyarı var
     time.sleep(1)
     alert.accept() # uyarıyı kabul et
+    print("modem yeniden başlatılıyor")
     time.sleep(20)
     browser.quit() #tarayıcıyı kapat
+    print("modem yeniden başlatıldı")
+    
 
 def megakapat():
     os.system("TASKKILL /IM MEGAsync.exe /F /T")
+    print("mega kapatıldı")
     time.sleep(20)
     os.system("start C:\\Users\\valid\\AppData\\Local\\MEGAsync\\MEGAsync.exe")
+    print("mega  açıldı")
 
 
 def main():
@@ -64,26 +61,32 @@ def main():
     if icon:
         pro = os.path.isfile('.\\Ekler\\pro.png')
         if pro:
-            check()
+           pass
         else:
             print("pro.png dosyası yok")
+            time.sleep(10)
     else:
         print("icon.png yok")
-        time.sleep(5)
+        time.sleep(20)
 
-def check():
-    try:
-        pyautogui.locateCenterOnScreen(".\\Ekler\\icon.png")
-        pyautogui.locateCenterOnScreen(".\\Ekler\\pro.png")
-        giris()
-        modemreboot()
-        print("modem yeniden başlatıldı")
-        megakapat()
-        print("mega kapatılıp açıldı")
-    except TypeError:
-        print("Limit Aşımına Rastlanmadı. İptal etmek için ctrl+c basın")
-        time.sleep(yenileme)
-        check()
 
 
 main()
+while True:
+    try:
+        time.sleep(5)
+        pyautogui.locateCenterOnScreen(".\\Ekler\\icon.png")
+        #pyautogui.locateCenterOnScreen(".\\Ekler\\pro.png")
+
+        driver_path = ".\\Ekler\\chromedriver.exe"
+        browser = webdriver.Chrome(executable_path=driver_path)
+        browser.get(url)
+        time.sleep(5)
+
+        giris()
+        modemreboot()
+        megakapat()
+    except TypeError:
+        saat = time.strftime('%X')
+        print(saat, "Limit Aşımına Rastlanmadı." )
+        time.sleep(yenileme)
