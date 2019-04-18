@@ -14,11 +14,12 @@ yenileme = 60
             #DEĞİŞKENLER
 
 
-def modemreboot():
+
+def	giris(): #kullanıcı adı ve şifre girerek giriş yap
     driver_path = ".\\Ekler\\chromedriver.exe"
     browser = webdriver.Chrome(executable_path=driver_path)
     browser.get(url)
-    time.sleep(3)
+    time.sleep(5)
 
     kullanici = browser.find_element_by_id("userName")
     sifre = browser.find_element_by_id("pcPassword")
@@ -28,8 +29,20 @@ def modemreboot():
     sifre.send_keys(sifree)
 
     oturumac.click()
+    time.sleep(5)
 
-    time.sleep(2)
+def giris2(): #cookie ile giriş yap javascript kullanarak
+    driver_path = ".\\Ekler\\chromedriver.exe"
+    browser = webdriver.Chrome(executable_path=driver_path)
+    browser.get(url)
+    time.sleep(5)
+    browser.execute_script('document.cookie = "Authorization=Basic YWRtaW46MkVZKjEyZW0t"')
+    time.sleep(1)
+    browser.execute_script('window.location.reload()')
+    time.sleep(5)
+	
+	
+def modemreboot():
     button_reboot = browser.find_element_by_id("button_reboot") #button_reboot idini bul ve değişken ata
     button_reboot.click() #button_reboot'a tıkla
 
@@ -46,7 +59,7 @@ def megakapat():
     os.system("start C:\\Users\\valid\\AppData\\Local\\MEGAsync\\MEGAsync.exe")
 
 
-def dosya_kontrol():
+def main():
     icon = os.path.isfile('.\\Ekler\\icon.png')
     if icon:
         pro = os.path.isfile('.\\Ekler\\pro.png')
@@ -62,6 +75,7 @@ def check():
     try:
         pyautogui.locateCenterOnScreen(".\\Ekler\\icon.png")
         pyautogui.locateCenterOnScreen(".\\Ekler\\pro.png")
+        giris()
         modemreboot()
         print("modem yeniden başlatıldı")
         megakapat()
@@ -72,5 +86,4 @@ def check():
         check()
 
 
-
-modemreboot()
+main()
