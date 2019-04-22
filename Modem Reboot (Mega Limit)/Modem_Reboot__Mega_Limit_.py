@@ -1,14 +1,14 @@
 
 from selenium import webdriver
 import time
-import os
-import pyautogui
-
+from os import system
+import re
+import win32gui
 
             #DEĞİŞKENLER
 url = "http://192.168.1.1/#__restart.htm"
 kullanici_adi = "admin"
-sifree = "2EY*12em-"
+sifree = "şifre"
 yenileme = 300
 temizle = os.system("cls")
 
@@ -56,37 +56,34 @@ def megakapat():
     print("mega  açıldı")
 
 
-def main():
-    icon = os.path.isfile('.\\Ekler\\icon.png')
-    if icon:
-        pro = os.path.isfile('.\\Ekler\\pro.png')
-        if pro:
-           pass
-        else:
-            print("pro.png dosyası yok")
-            time.sleep(10)
-    else:
-        print("icon.png yok")
-        time.sleep(20)
+
+
+def acik_pencereler():
+    def callback(handle, data):
+        titles.append(win32gui.GetWindowText(handle))
+
+    titles = []
+    win32gui.EnumWindows(callback, None)
+    return titles
 
 
 
-main()
 while True:
-    try:
-        time.sleep(5)
-        pyautogui.locateCenterOnScreen(".\\Ekler\\icon.png")
-        #pyautogui.locateCenterOnScreen(".\\Ekler\\pro.png")
-
-        driver_path = ".\\Ekler\\chromedriver.exe"
-        browser = webdriver.Chrome(executable_path=driver_path)
-        browser.get(url)
-        time.sleep(5)
-
-        giris()
-        modemreboot()
-        megakapat()
-    except TypeError:
-        saat = time.strftime('%X')
-        print(saat, "Limit Aşımına Rastlanmadı." )
+    basliklar = acik_pencereler()
+    basliklar = ''.join(map(str, basliklar)) #aık pencereleri arraydan string'e çevirir
+    sonuc = re.search("aktarma kotası", basliklar) #açık uygulamalarda "aktarma kotası" ismi varsa "Ücretsiz aktarma kotası aşıldı"
+    if sonuc:
+        driver_path = ".\\chromedriver.exe"
+        chrome_driver = os.path.isfile(driver_path)
+        if chrome_driver:
+            browser = webdriver.Chrome(executable_path=driver_path)
+            browser.get(url)
+            time.sleep(5)
+            giris()
+            modemreboot()
+            megakapat()
+        else:
+            print("chromedriver.exe yok")
+    else:
+        print("Kota aşımı Yok")
         time.sleep(yenileme)
